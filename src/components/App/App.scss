@@ -1,0 +1,34 @@
+@import "../../style/variables.scss";
+
+.App {
+    display: flex;
+    height: 100vh;
+    text-align: center;
+    
+    .layout {
+        width: 35rem;
+        margin: auto;
+        padding: 1rem;
+        border: 1px solid $grey-color-200;
+        background: $grey-color-100;
+        &>div {
+            border: 1px solid $grey-color-200;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

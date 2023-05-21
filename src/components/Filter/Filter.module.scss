@@ -1,0 +1,50 @@
+@import "../../style/variables.scss";
+
+.filter {
+    background: white;
+
+    nav {
+        border-bottom: 1px solid $grey-color-200;
+
+        ul {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+
+            li {
+                position: relative;
+                padding: 1rem 0;
+
+                button {
+                    font-size: 1.25rem;
+                }
+
+                .button::after {
+                    content: "";
+                    height: 2px;
+                    width: 140%;
+                    background: black;
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    animation: appear 0.5s;
+                }
+
+                .inactive {
+                    opacity: .7;
+                }
+            }
+        }
+    }
+}
+
+@keyframes appear {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 140%;
+    }
+}

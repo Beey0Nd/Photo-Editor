@@ -1,0 +1,52 @@
+.slider {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+
+    &>div:nth-child(1) {
+        overflow: hidden;
+
+        ul {
+            display: flex;
+            position: relative;
+            transition: all 0.75s;
+            animation: appear 1s ease-in-out;
+            
+            li {
+                flex: 0 0 100%;
+                max-width: 100%;
+
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+
+    }
+
+    &>div:nth-child(2) {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            font-size: 1.25rem;
+        }
+
+        img {
+            height: 2.5rem;
+        }
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}
