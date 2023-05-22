@@ -10,19 +10,23 @@ interface Props {
     mode: StateMode,
     setMode: Dispatch<React.SetStateAction<StateMode>>,
     setChosenPhotos: Dispatch<React.SetStateAction<ChosenPhotosState>>,
-    setPages: Dispatch<SetStateAction<StatePages>>
+    setPages: Dispatch<SetStateAction<StatePages>>,
+    setActivePage: Dispatch<SetStateAction<number>>
 }
 
 function RemoveSection({
     mode,
     setMode,
     setChosenPhotos,
-    setPages }: Props) {
+    setPages,
+    setActivePage
+}: Props) {
 
     const { setExpanded } = useContext(ExpandedContext)
 
     const handleClear = () => {
         setPages([])
+        setActivePage(0)
     }
 
     const handleChoose = () => {

@@ -67,7 +67,7 @@ function App() {
                             activeModal={activeModal}
                             setActiveModal={setActiveModal}
                         />
-                        <Filter activePage={activePage} setPages={setPages} />
+                        <Filter activePage={activePage} setActivePage={setActivePage} setPages={setPages} />
                     </DragContext.Provider>
                 </Layout>
             </ExpandedContext.Provider>

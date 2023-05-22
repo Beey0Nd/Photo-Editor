@@ -19,12 +19,13 @@ export interface StatePhoto {
     type: string
 }
 interface Props {
+    activePage: number,
+    setActivePage: Dispatch<SetStateAction<number>>,
     setPages: Dispatch<SetStateAction<StatePages>>,
-    activePage: number
 }
 
 
-function Filter({ activePage, setPages }: Props) {
+function Filter({ activePage, setActivePage, setPages }: Props) {
     const [mode, setMode] = useState<StateMode>("read")
     const [activeButton, setActiveButton] = useState("Галерея");
     const [chosenPhotos, setChosenPhotos] = useState<ChosenPhotosState>([]);
@@ -45,6 +46,7 @@ function Filter({ activePage, setPages }: Props) {
                 setMode={setMode}
                 setPages={setPages}
                 setChosenPhotos={setChosenPhotos}
+                setActivePage={setActivePage}
             />
             <FilterPhotos
                 activePage={activePage}
