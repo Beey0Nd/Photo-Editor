@@ -1,32 +1,25 @@
 import { Dispatch } from "react";
 import classes from "./Modal.module.scss"
-import close from "../../icons/close.png"
+import { IModal } from "../App/App";
 
 interface Props {
-    setActiveModal: Dispatch<React.SetStateAction<boolean>>
+    setActiveModal: Dispatch<React.SetStateAction<IModal>>,
+    name: string,
+    children: React.ReactNode
 }
 
-function Modal({ setActiveModal }: Props) {
-    const handleClick = () => setActiveModal(false)
+function Modal({ setActiveModal, name, children }: Props) {
+    const handleClick = () => setActiveModal({
+        name: "",
+        active: false
+    })
 
     return (
         <div className={classes.modal} onClick={handleClick}>
-            <div
+            <div className={classes[name]}
                 onClick={(e) => e.stopPropagation()}
             >
-                <button
-                    className={classes.close}
-                    onClick={handleClick}>
-                    <img src={close} alt="Close button" />
-                </button>
-                <p>
-                    Продукт успешно добавлен в корзину
-                </p>
-                <button
-                    className={classes.garbage}
-                    onClick={handleClick}>
-                    Перейти в корзину
-                </button>
+                {children}
             </div>
         </div>
     );

@@ -14,7 +14,8 @@ interface Props {
     setPages: Dispatch<SetStateAction<StatePages>>,
     chosenPhotos: ChosenPhotosState,
     setChosenPhotos: Dispatch<SetStateAction<ChosenPhotosState>>,
-    activeButton: string
+    activeButton: string,
+    activePage: number
 }
 
 function FilterPhotos({
@@ -24,7 +25,8 @@ function FilterPhotos({
     setPages,
     chosenPhotos,
     setChosenPhotos,
-    activeButton
+    activeButton,
+    activePage
 }: Props) {
 
     const { expanded } = useContext(ExpandedContext)
@@ -52,6 +54,7 @@ function FilterPhotos({
                 {photos.map(photo => {
                     if (activeButton === photo.type) return (
                         <FilterPhoto
+                            activePage={activePage}
                             mode={mode}
                             chosenPhotos={chosenPhotos}
                             setChosenPhotos={setChosenPhotos}

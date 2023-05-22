@@ -11,7 +11,8 @@ interface Props {
     activeButton: string,
     chosenPhotos: ChosenPhotosState,
     setChosenPhotos: Dispatch<SetStateAction<ChosenPhotosState>>,
-    setPages: Dispatch<SetStateAction<StatePages>>
+    setPages: Dispatch<SetStateAction<StatePages>>,
+    activePage: number
 }
 
 function FilterPhoto({
@@ -22,7 +23,8 @@ function FilterPhoto({
     chosenPhotos,
     setChosenPhotos,
     setPages,
-    activeButton
+    activeButton,
+    activePage
 }: Props) {
     const { dragSrc, setDragSrc } = useContext(DragContext)
 
@@ -35,7 +37,7 @@ function FilterPhoto({
             }
         } else {
             if (activeButton === "Галерея") {
-                setPages(prev => [src, ...prev])
+                setPages(prev => [...prev.slice(0, activePage), src, ...prev.slice(activePage, prev.length)])
             }
         }
     }

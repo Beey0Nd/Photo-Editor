@@ -20,6 +20,10 @@ interface DragContext {
 
 export type State = boolean
 
+export type IModal = {
+    name: string,
+    active: boolean
+}
 
 export const ExpandedContext = createContext<ExpandedContext>({
     expanded: false,
@@ -34,11 +38,13 @@ export const DragContext = createContext<DragContext>({
 export type StatePages = string[]
 
 function App() {
+    const [activeModal, setActiveModal] = useState<IModal>({ name: "", active: false })
     const [expanded, setExpanded] = useState<State>(false)
     const [pages, setPages] = useState<StatePages>([
         abstract, abstract2, waves
     ]);
     const [dragSrc, setDragSrc] = useState("");
+    const [activePage, setActivePage] = useState(0);
 
     return (
         <div className="App">
@@ -47,12 +53,21 @@ function App() {
                 setExpanded
             }}>
                 <Layout>
-                    <Header />
+                    <Header
+                        activeModal={activeModal}
+                        setActiveModal={setActiveModal} />
                     <DragContext.Provider value={{
                         dragSrc, setDragSrc
                     }}>
-                        <Slider pages={pages} setPages={setPages} />
-                        <Filter setPages={setPages} />
+                        <Slider
+                            pages={pages}
+                            setPages={setPages}
+                            activePage={activePage}
+                            setActivePage={setActivePage}
+                            activeModal={activeModal}
+                            setActiveModal={setActiveModal}
+                        />
+                        <Filter activePage={activePage} setPages={setPages} />
                     </DragContext.Provider>
                 </Layout>
             </ExpandedContext.Provider>

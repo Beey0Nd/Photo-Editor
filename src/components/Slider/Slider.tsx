@@ -4,15 +4,21 @@ import rightArrow from "../../icons/right-arrow.png"
 import classes from "./Slider.module.scss"
 import { v4 } from "uuid";
 
-import { DragContext, ExpandedContext, StatePages } from "../App/App";
+import { DragContext, ExpandedContext, IModal, StatePages } from "../App/App";
+import Modal from "../Modal/Modal";
+import ImageContent from "../Modal/ImageContent";
+import { createPortal } from "react-dom";
 
 interface Props {
     pages: StatePages
     setPages: Dispatch<SetStateAction<StatePages>>
+    activePage: number,
+    setActivePage: Dispatch<SetStateAction<number>>,
+    activeModal: IModal,
+    setActiveModal: Dispatch<SetStateAction<IModal>>
 }
 
-function Slider({ pages, setPages }: Props) {
-    const [activePage, setActivePage] = useState(0);
+function Slider({ pages, setPages, activePage, setActivePage, activeModal, setActiveModal }: Props) {
     const { expanded } = useContext(ExpandedContext)
     const { dragSrc, setDragSrc } = useContext(DragContext)
 
@@ -66,6 +72,13 @@ function Slider({ pages, setPages }: Props) {
         target.style.opacity = "1"
     }
 
+    function handleSlideClick() {
+        setActiveModal({
+            name: "slider",
+            active: true
+        })
+    }
+
     return (
         <section className={classes.slider}>
             <div>
@@ -78,7 +91,7 @@ function Slider({ pages, setPages }: Props) {
                         left: `-${100 * (!pages.length ? 0 : activePage)}%`
                     }}>
                     {pages.map(page => (
-                        <li key={v4()}>
+                        <li onClick={handleSlideClick} key={v4()}>
                             <img src={page} alt="Slider image" />
                         </li>
                     ))}
@@ -100,6 +113,11 @@ function Slider({ pages, setPages }: Props) {
                 ) : null
                 }
             </div>
+            {activeModal && activeModal.name === "slider" && createPortal(
+                <Modal name="slider" setActiveModal={setActiveModal}>
+                    <ImageContent setActiveModal={setActiveModal} src={pages[activePage]} />
+                </Modal>, document.querySelector(".App") as Element
+            )}
         </section>
     );
 }
