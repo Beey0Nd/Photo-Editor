@@ -1,42 +1,43 @@
-import { Dispatch } from "react"
+import { Dispatch, SetStateAction, useContext } from "react"
 import clear from "../../icons/close.png"
 import garbage from "../../icons/garbage.png"
 import expand from "../../icons/spread.png"
 import classes from "./RemoveSection.module.scss"
-import { ChosenPhotosState, StateMode, StatePhoto } from "./Filter"
+import { ChosenPhotosState, StateMode } from "./Filter"
+import { ExpandedContext, State, StatePages } from "../App/App"
 
 interface Props {
     mode: StateMode,
     setMode: Dispatch<React.SetStateAction<StateMode>>,
-    photos: StatePhoto[], 
-    setPhotos: Dispatch<React.SetStateAction<StatePhoto[]>>,
-    chosenPhotos: ChosenPhotosState,
-    setChosenPhotos: Dispatch<React.SetStateAction<ChosenPhotosState>>
+    setChosenPhotos: Dispatch<React.SetStateAction<ChosenPhotosState>>,
+    setPages: Dispatch<SetStateAction<StatePages>>
 }
 
 function RemoveSection({
-    mode, 
-    setMode, 
-    photos, 
-    setPhotos,
-    chosenPhotos, 
-    setChosenPhotos}: Props) {
+    mode,
+    setMode,
+    setChosenPhotos,
+    setPages }: Props) {
+
+    const { setExpanded } = useContext(ExpandedContext)
+
     const handleClear = () => {
-        setPhotos(photos => photos.filter(photo => !chosenPhotos.find(chosenPhoto => chosenPhoto.id === photo.id)))
-        setChosenPhotos([])
-        setMode("read")
+        setPages([])
     }
 
     const handleChoose = () => {
-        if(mode === "change") setChosenPhotos([])
+        if (mode === "change") setChosenPhotos([])
         setMode(mode === "read" ? "change" : "read")
+    }
+
+    const handleExpand = () => {
+        setExpanded((prev: State) => !prev)
     }
 
     return (
         <div className={classes.remove}>
-            <button 
-            disabled={mode === "read" ? true : false}
-            onClick={handleClear}>
+            <button
+                onClick={handleClear}>
                 <img src={clear} alt="Clear button" />
                 <p>Очистить</p>
             </button>
@@ -44,7 +45,7 @@ function RemoveSection({
                 <img src={garbage} alt="Garbage button" />
                 <p>Выбрать</p>
             </button>
-            <button>
+            <button onClick={handleExpand}>
                 <img src={expand} alt="Expand button" />
                 <p>Развернуть</p>
             </button>

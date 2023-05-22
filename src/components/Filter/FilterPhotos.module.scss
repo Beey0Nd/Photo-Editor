@@ -1,30 +1,47 @@
 .filterPhotos {
+    height: 20rem;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
     ul {
         display: flex;
         padding: 0.75rem;
         flex-wrap: wrap;
         gap: 1rem;
         margin: 0 auto;
+
         .chosen {
             opacity: .5;
         }
+
         li {
             width: 25%;
+            cursor: grab;
+            position: relative;
+
             img {
                 height: 100%;
                 width: 100%;
                 object-fit: cover;
                 border-radius: 0.5rem;
             }
+
             button {
                 padding: 1rem 0.5rem;
                 border: 1px dashed black;
                 border-radius: 0.5rem;
             }
         }
+
         input {
             display: none;
         }
     }
+}
 
+.expanded {
+    height: 46rem;
 }

@@ -1,0 +1,48 @@
+@import "../../style/variables.scss";
+
+.modal {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    div {
+        width: 40rem;
+        background: white;
+        padding: 1rem;
+        border: 2px solid $grey-color-200;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgb(110, 255, 110);
+
+        .close {
+            align-self: flex-end;
+            margin-bottom: auto;
+
+            img {
+                height: 2rem;
+            }
+        }
+
+        p {
+            padding: 2rem;
+            font-size: 3rem;
+        }
+
+        .garbage {
+            padding: .5rem 0.75rem;
+            background: black;
+            color: white;
+            border-radius: .25rem;
+        }
+
+    }
+}

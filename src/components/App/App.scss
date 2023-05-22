@@ -4,13 +4,14 @@
     display: flex;
     height: 100vh;
     text-align: center;
-    
+
     .layout {
         width: 35rem;
         margin: auto;
         padding: 1rem;
         border: 1px solid $grey-color-200;
         background: $grey-color-100;
+
         &>div {
             border: 1px solid $grey-color-200;
         }

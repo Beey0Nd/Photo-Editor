@@ -7,9 +7,9 @@ interface Props {
     setActiveButton: (button: string) => void
 }
 
-function Button({children, activeButton, setActiveButton}: Props) {
+function Button({ children, activeButton, setActiveButton }: Props) {
     const buttonRef = useRef<HTMLButtonElement>(null);
-    
+
     const handleClick = () => {
         setActiveButton(buttonRef.current!.innerText)
     }
@@ -17,9 +17,9 @@ function Button({children, activeButton, setActiveButton}: Props) {
     return (
         <li>
             <button
-            ref={buttonRef} 
-            onClick={handleClick}
-            className={activeButton === children ? classes.button : classes.inactive}>
+                ref={buttonRef}
+                onClick={handleClick}
+                className={activeButton === children ? classes.button : classes.inactive}>
                 {children}
             </button>
         </li>

@@ -1,32 +1,36 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Buttons from "./Buttons";
 import RemoveSection from "./RemoveSection";
 import FilterPhotos from "./FilterPhotos";
 import classes from "./Filter.module.scss"
 import abstract4 from "../../images/abstract4.jpg"
 import abstract5 from "../../images/abstract5.jpg"
+import { StatePages } from "../App/App";
 
 export interface ChosenPhoto {
     id: number
 }
-
 export type ChosenPhotosState = ChosenPhoto[]
-
 export type StateMode = "read" | "change";
-
 export interface StatePhoto {
     src: string,
     alt: string,
-    id: number
+    id: number,
+    type: string
+}
+interface Props {
+    setPages: Dispatch<SetStateAction<StatePages>>
 }
 
-function Filter() {
+
+function Filter({ setPages }: Props) {
     const [mode, setMode] = useState<StateMode>("read")
     const [activeButton, setActiveButton] = useState("Галерея");
     const [chosenPhotos, setChosenPhotos] = useState<ChosenPhotosState>([]);
     const [photos, setPhotos] = useState<StatePhoto[]>([
-        { src: abstract4, alt: "Abstract picture", id: 0 },
-        { src: abstract5, alt: "Abstract picture", id: 1 },
+        { src: abstract4, alt: "Abstract picture", id: 0, type: "Галерея" },
+        { src: abstract5, alt: "Abstract picture", id: 1, type: "Шаблоны" },
+        { src: abstract5, alt: "Abstract picture", id: 2, type: "Фон" },
     ]);
 
     return (
@@ -38,15 +42,15 @@ function Filter() {
             <RemoveSection
                 mode={mode}
                 setMode={setMode}
-                photos={photos}
-                setPhotos={setPhotos}
-                chosenPhotos={chosenPhotos}
+                setPages={setPages}
                 setChosenPhotos={setChosenPhotos}
             />
             <FilterPhotos
                 mode={mode}
                 photos={photos}
                 setPhotos={setPhotos}
+                setPages={setPages}
+                activeButton={activeButton}
                 chosenPhotos={chosenPhotos}
                 setChosenPhotos={setChosenPhotos}
             />
