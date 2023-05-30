@@ -5,7 +5,7 @@ import FilterPhotos from "./FilterPhotos";
 import classes from "./Filter.module.scss"
 import abstract4 from "../../images/abstract4.jpg"
 import abstract5 from "../../images/abstract5.jpg"
-import { StatePages } from "../App/App";
+import { StateImages } from "../App/App";
 
 export interface ChosenPhoto {
     id: number
@@ -21,11 +21,11 @@ export interface StatePhoto {
 interface Props {
     activePage: number,
     setActivePage: Dispatch<SetStateAction<number>>,
-    setPages: Dispatch<SetStateAction<StatePages>>,
+    setImages: Dispatch<SetStateAction<StateImages>>,
 }
 
 
-function Filter({ activePage, setActivePage, setPages }: Props) {
+function Filter({ activePage, setActivePage, setImages }: Props) {
     const [mode, setMode] = useState<StateMode>("read")
     const [activeButton, setActiveButton] = useState("Галерея");
     const [chosenPhotos, setChosenPhotos] = useState<ChosenPhotosState>([]);
@@ -44,7 +44,7 @@ function Filter({ activePage, setActivePage, setPages }: Props) {
             <RemoveSection
                 mode={mode}
                 setMode={setMode}
-                setPages={setPages}
+                setImages={setImages}
                 setChosenPhotos={setChosenPhotos}
                 setActivePage={setActivePage}
             />
@@ -53,7 +53,7 @@ function Filter({ activePage, setActivePage, setPages }: Props) {
                 mode={mode}
                 photos={photos}
                 setPhotos={setPhotos}
-                setPages={setPages}
+                setImages={setImages}
                 activeButton={activeButton}
                 chosenPhotos={chosenPhotos}
                 setChosenPhotos={setChosenPhotos}

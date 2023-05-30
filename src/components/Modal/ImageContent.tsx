@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import close from "../../icons/close.png"
 import { IModal } from "../App/App";
+import Crop from "../Crop/Crop";
 
 interface Props {
     src: string,
@@ -18,7 +19,25 @@ function ImageContent({ src, setActiveModal }: Props) {
                 onClick={handleClick}>
                 <img src={close} alt="Close button" />
             </button>
-            <img src={src} alt={"Abstract image"} />
+            <Crop src={src} /> 
+            {/* <div className="">
+                <button>
+                    <img src="asd" alt="" />
+                    <p>Повернуть влево</p>
+                </button>
+                <button>
+                    <img src="asd" alt="" />
+                    <p>Повернуть вправо</p>
+                </button>
+                <button>
+                    <img src="asd" alt="" />
+                    <p>Применить фильтр</p>
+                </button>
+                <button>
+                    <img src="asd" alt="" />
+                    <p>Кадрировать изображение</p>
+                </button>
+            </div> */}
         </>
     );
 }

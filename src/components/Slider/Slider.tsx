@@ -4,21 +4,21 @@ import rightArrow from "../../icons/right-arrow.png"
 import classes from "./Slider.module.scss"
 import { v4 } from "uuid";
 
-import { DragContext, ExpandedContext, IModal, StatePages } from "../App/App";
+import { DragContext, ExpandedContext, IModal, StateImages } from "../App/App";
 import Modal from "../Modal/Modal";
 import ImageContent from "../Modal/ImageContent";
 import { createPortal } from "react-dom";
 
 interface Props {
-    pages: StatePages
-    setPages: Dispatch<SetStateAction<StatePages>>
+    images: StateImages
+    setImages: Dispatch<SetStateAction<StateImages>>
     activePage: number,
     setActivePage: Dispatch<SetStateAction<number>>,
     activeModal: IModal,
     setActiveModal: Dispatch<SetStateAction<IModal>>
 }
 
-function Slider({ pages, setPages, activePage, setActivePage, activeModal, setActiveModal }: Props) {
+function Slider({ images, setImages, activePage, setActivePage, activeModal, setActiveModal }: Props) {
     const { expanded } = useContext(ExpandedContext)
     const { dragSrc, setDragSrc } = useContext(DragContext)
 
@@ -31,13 +31,13 @@ function Slider({ pages, setPages, activePage, setActivePage, activeModal, setAc
 
         if (direction === "left") {
             if (activePage - 1 < 0) {
-                newState = pages.length - 1;
+                newState = images.length - 1;
             } else {
                 newState = activePage - 1;
             }
         }
         if (direction === "right") {
-            if (activePage + 1 > pages.length - 1) {
+            if (activePage + 1 > images.length - 1) {
                 newState = 0;
             } else {
                 newState = activePage + 1;
@@ -52,8 +52,15 @@ function Slider({ pages, setPages, activePage, setActivePage, activeModal, setAc
 
         target.style.opacity = "1"
 
-        setPages(prev => {
-            return [...prev.slice(0, activePage), dragSrc, ...prev.slice(activePage, prev.length)]
+        const newImage = {
+            src: dragSrc,
+            grayscale: false,
+            rotation: 0,
+            crop: {left: "", right: "", top: "", bottom: ""}
+        }
+
+        setImages(prev => {
+            return [...prev.slice(0, activePage), newImage, ...prev.slice(activePage, prev.length)]
         })
         setDragSrc("")
     }
@@ -88,17 +95,17 @@ function Slider({ pages, setPages, activePage, setActivePage, activeModal, setAc
                     onDrop={(e) => handleDrop(e)}
                     className="slider__drop"
                     style={{
-                        left: `-${100 * (!pages.length ? 0 : activePage)}%`
+                        left: `-${100 * (!images.length ? 0 : activePage)}%`
                     }}>
-                    {pages.map(page => (
+                    {images.map(image => (
                         <li onClick={handleSlideClick} key={v4()}>
-                            <img src={page} alt="Slider image" />
+                            <img src={image.src} alt="Slider image" />
                         </li>
                     ))}
                 </ul>
             </div>
             <div>
-                {pages.length ? (
+                {images.length ? (
                     <>
                         <button
                             onClick={() => handleArrow("left")}>
@@ -113,9 +120,9 @@ function Slider({ pages, setPages, activePage, setActivePage, activeModal, setAc
                 ) : null
                 }
             </div>
-            {activeModal && activeModal.name === "slider" && createPortal(
+            {(activeModal && activeModal.name === "slider") && createPortal(
                 <Modal name="slider" setActiveModal={setActiveModal}>
-                    <ImageContent setActiveModal={setActiveModal} src={pages[activePage]} />
+                    <ImageContent setActiveModal={setActiveModal} src={images[activePage].src} />
                 </Modal>, document.querySelector(".App") as Element
             )}
         </section>

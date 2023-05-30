@@ -4,14 +4,14 @@ import classes from "./FilterPhotos.module.scss"
 import { ChosenPhotosState, StatePhoto } from "./Filter";
 import { StateMode } from "./Filter"
 import { v4 } from "uuid"
-import { ExpandedContext, StatePages } from "../App/App";
+import { ExpandedContext, StateImages } from "../App/App";
 
 
 interface Props {
     mode: StateMode,
     photos: StatePhoto[],
     setPhotos: Dispatch<SetStateAction<StatePhoto[]>>,
-    setPages: Dispatch<SetStateAction<StatePages>>,
+    setImages: Dispatch<SetStateAction<StateImages>>,
     chosenPhotos: ChosenPhotosState,
     setChosenPhotos: Dispatch<SetStateAction<ChosenPhotosState>>,
     activeButton: string,
@@ -22,7 +22,7 @@ function FilterPhotos({
     mode,
     photos,
     setPhotos,
-    setPages,
+    setImages,
     chosenPhotos,
     setChosenPhotos,
     activeButton,
@@ -59,7 +59,7 @@ function FilterPhotos({
                             chosenPhotos={chosenPhotos}
                             setChosenPhotos={setChosenPhotos}
                             activeButton={activeButton}
-                            setPages={setPages}
+                            setImages={setImages}
                             id={photo.id}
                             key={v4()}
                             src={photo.src}

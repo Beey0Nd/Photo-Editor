@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useContext } from "react";
 import { ChosenPhotosState } from "./Filter";
 import classes from "./FilterPhotos.module.scss"
-import { DragContext, StatePages } from "../App/App";
+import { DragContext, StateImages } from "../App/App";
 
 interface Props {
     src: string,
@@ -11,7 +11,7 @@ interface Props {
     activeButton: string,
     chosenPhotos: ChosenPhotosState,
     setChosenPhotos: Dispatch<SetStateAction<ChosenPhotosState>>,
-    setPages: Dispatch<SetStateAction<StatePages>>,
+    setImages: Dispatch<SetStateAction<StateImages>>,
     activePage: number
 }
 
@@ -22,7 +22,7 @@ function FilterPhoto({
     mode,
     chosenPhotos,
     setChosenPhotos,
-    setPages,
+    setImages,
     activeButton,
     activePage
 }: Props) {
@@ -37,7 +37,18 @@ function FilterPhoto({
             }
         } else {
             if (activeButton === "Галерея") {
-                setPages(prev => [...prev.slice(0, activePage), src, ...prev.slice(activePage, prev.length)])
+                const newImage = {
+                    src,
+                    grayscale: false,
+                    rotation: 0,
+                    crop: {
+                        right: "",
+                        left: "",
+                        top: "",
+                        bottom: ""
+                    }
+                }
+                setImages(prev => [...prev.slice(0, activePage), newImage, ...prev.slice(activePage, prev.length)])
             }
         }
     }

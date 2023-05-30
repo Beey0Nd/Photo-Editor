@@ -4,13 +4,13 @@ import garbage from "../../icons/garbage.png"
 import expand from "../../icons/spread.png"
 import classes from "./RemoveSection.module.scss"
 import { ChosenPhotosState, StateMode } from "./Filter"
-import { ExpandedContext, State, StatePages } from "../App/App"
+import { ExpandedContext, State, StateImages } from "../App/App"
 
 interface Props {
     mode: StateMode,
     setMode: Dispatch<React.SetStateAction<StateMode>>,
     setChosenPhotos: Dispatch<React.SetStateAction<ChosenPhotosState>>,
-    setPages: Dispatch<SetStateAction<StatePages>>,
+    setImages: Dispatch<SetStateAction<StateImages>>,
     setActivePage: Dispatch<SetStateAction<number>>
 }
 
@@ -18,14 +18,14 @@ function RemoveSection({
     mode,
     setMode,
     setChosenPhotos,
-    setPages,
+    setImages,
     setActivePage
 }: Props) {
 
     const { setExpanded } = useContext(ExpandedContext)
 
     const handleClear = () => {
-        setPages([])
+        setImages([])
         setActivePage(0)
     }
 

@@ -35,13 +35,36 @@ export const DragContext = createContext<DragContext>({
     setDragSrc: () => { }
 });
 
-export type StatePages = string[]
+export type Crop = {right: string, left: string, top: string, bottom: string}
+export type Image = { src: string, grayscale: boolean, rotation: number, crop: Crop }
+export type StateImages = Image[]
+
+const initialState = {
+    grayscale: false,
+    rotation: 0,
+    crop: {
+        right: "",
+        left: "",
+        top: "",
+        bottom: ""
+    }
+}
 
 function App() {
     const [activeModal, setActiveModal] = useState<IModal>({ name: "", active: false })
     const [expanded, setExpanded] = useState<State>(false)
-    const [pages, setPages] = useState<StatePages>([
-        abstract, abstract2, waves
+    const [images, setImages] = useState<StateImages>([
+        {
+            src: abstract,
+            ...initialState
+        },
+        {
+            src: abstract2,
+            ...initialState
+        }, {
+            src: waves,
+            ...initialState
+        }
     ]);
     const [dragSrc, setDragSrc] = useState("");
     const [activePage, setActivePage] = useState(0);
@@ -60,14 +83,14 @@ function App() {
                         dragSrc, setDragSrc
                     }}>
                         <Slider
-                            pages={pages}
-                            setPages={setPages}
+                            images={images}
+                            setImages={setImages}
                             activePage={activePage}
                             setActivePage={setActivePage}
                             activeModal={activeModal}
                             setActiveModal={setActiveModal}
                         />
-                        <Filter activePage={activePage} setActivePage={setActivePage} setPages={setPages} />
+                        <Filter activePage={activePage} setActivePage={setActivePage} setImages={setImages} />
                     </DragContext.Provider>
                 </Layout>
             </ExpandedContext.Provider>
