@@ -32,7 +32,7 @@ function Crop({src}: Props) {
         <>
             <Cropper
                 src={src}
-                style={{ height: 400, width: "100%" }}
+                style={{ height: 400, width: "90%" }}
                 // Cropper.js options
                 initialAspectRatio={16 / 9}
                 guides={false}
