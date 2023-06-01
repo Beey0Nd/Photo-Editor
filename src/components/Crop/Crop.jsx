@@ -63,7 +63,6 @@ function Crop({ src }) {
         <div
             ref={sectionRef}
             onWheel={handleWheel}
-            onTouc
             className={classes.crop}>
             <img
                 style={{ transform: `scale(${scale})` }}
