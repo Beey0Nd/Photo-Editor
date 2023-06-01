@@ -8,6 +8,7 @@ import classes from "./Crop.module.scss";
 
 function Crop({ src }) {
     const [isCropShowing, setIsCropShowing] = useState(false)
+    const [cropped, setCroppped] = useState(false)
     const [scale, setScale] = useState(1);
     const canvasRef = useRef(null)
     const sectionRef = useRef(null)
@@ -22,6 +23,7 @@ function Crop({ src }) {
     }, [])
 
     function handleWheel(e) {
+        if(cropped) return
         const delta = e.deltaY;
         if (delta < 0) {
             setScale(prev => Math.round((prev + 0.1) * 10) / 10)
@@ -48,7 +50,7 @@ function Crop({ src }) {
 
         const imageXCoord = (imageInitialWidth - imageScaledWidth) / 2
         const imageYCoord = (imageInitialHeight - imageScaledHeight) / 2
-
+        
         ctx.drawImage(
             image,
             imageXCoord, imageYCoord,
@@ -56,7 +58,8 @@ function Crop({ src }) {
             0, 0,
             canvasWidth, canvasHeight
         )
-
+        
+        setCroppped(true)
     }
 
     return (
@@ -65,7 +68,10 @@ function Crop({ src }) {
             onWheel={handleWheel}
             className={classes.crop}>
             <img
-                style={{ transform: `scale(${scale})` }}
+                style={{ 
+                    transform: `scale(${scale})`,
+                    visibility: cropped ? "hidden" : "visible"
+                }}
                 ref={imageRef}
                 className={imageClass}
                 src={src}
@@ -76,7 +82,10 @@ function Crop({ src }) {
                 style={{
                     display: isCropShowing ? "block" : "none",
                     zIndex: "5" }} />
-            <button onClick={onCrop}>Crop</button>
+            <button 
+            disabled={cropped}
+            className={classes.button}
+            onClick={onCrop}>Crop</button>
         </div>
     )
 }

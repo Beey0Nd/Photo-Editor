@@ -29,7 +29,15 @@
         object-fit: contain;
     }
 
-    button {
+    .button {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 1rem;
+        background: white;
+        border-radius: .5rem;
+        border: 1px solid grey;
         z-index: 100;
     }
 }
