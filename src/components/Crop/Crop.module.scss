@@ -1,0 +1,28 @@
+@import "../../style/variables.scss";
+
+.crop {
+    height: 100%;
+    position: relative;
+    display: flex;
+    width: 100%;
+
+    .cropper {
+        background: rgba(127, 255, 227, 0.4);
+        position: absolute;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+
+    .image {
+        margin: 0 auto;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    button {
+        z-index: 100;
+    }
+}
