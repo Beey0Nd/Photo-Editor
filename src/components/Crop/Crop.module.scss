@@ -1,14 +1,16 @@
 @import "../../style/variables.scss";
 
 .crop {
-    height: 100%;
-    width: 100%;
+    height: inherit;
+    width: fit-content;
     position: relative;
     display: flex;
+    margin: auto;
 
     .cropper {
         display: block;
         width: 100%;
+        max-height: -webkit-fill-available;
         margin: auto;
         position: absolute;
         left: 0;
@@ -22,6 +24,7 @@
     .image {
         margin: auto;
         height: fit-content;
+        max-height: -webkit-fill-available;
         width: 100%;
         object-fit: contain;
     }
