@@ -4,7 +4,7 @@ import classes from "./Crop.module.scss";
 import rotateLeft from "../../icons/rotate-left.png";
 import rotateRight from "../../icons/rotate-right.png";
 import grayscaleImage from "../../icons/greyscale.png";
-import { useGesture } from "react-use-gesture";
+import { useGesture } from "@use-gesture/react";
 // interface Props {
 //     src: string
 // }
@@ -24,12 +24,13 @@ function Crop({ src, setImages }) {
 
     useGesture(
         {
-            onPinch: () => {
-                setScale(prev => prev - 1)
-            }
+            onPinch: (e) => {
+                console.log(e)
+            },
+            
         },
         {
-            domTarget: imageRef,
+            target: imageRef,
             eventOptions: { passive: false }
         }
     )
