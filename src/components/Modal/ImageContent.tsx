@@ -1,15 +1,16 @@
 import { Dispatch } from "react";
 import close from "../../icons/close.png"
-import { IModal } from "../App/App";
+import { IModal, Image, StateImages } from "../App/App";
 import Crop from "../Crop/Crop";
 import classes from "./Modal.module.scss";
 
 interface Props {
     src: string,
-    setActiveModal: Dispatch<React.SetStateAction<IModal>>
+    setActiveModal: Dispatch<React.SetStateAction<IModal>>,
+    setImages: Dispatch<React.SetStateAction<StateImages>>
 }
 
-function ImageContent({ src, setActiveModal }: Props) {
+function ImageContent({ src, setActiveModal, setImages }: Props) {
     const handleClick = () => setActiveModal({
         name: "",
         active: false
@@ -21,7 +22,7 @@ function ImageContent({ src, setActiveModal }: Props) {
                 onClick={handleClick}>
                 <img src={close} alt="Close button" />
             </button>
-            <Crop src={src} /> 
+            <Crop setImages={setImages} src={src} /> 
             {/* <div className="">
                 <button>
                     <img src="asd" alt="" />

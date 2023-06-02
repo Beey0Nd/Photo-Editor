@@ -4,46 +4,62 @@ import classes from "./Crop.module.scss";
 import rotateLeft from "../../icons/rotate-left.png";
 import rotateRight from "../../icons/rotate-right.png";
 import grayscaleImage from "../../icons/greyscale.png";
+import { useGesture } from "react-use-gesture";
 // interface Props {
 //     src: string
 // }
 
-function Crop({ src }) {
+function Crop({ src, setImages }) {
     const [isCropShowing, setIsCropShowing] = useState(false)
-    const [scale, setScale] = useState(1);
-    const [cropSettings, setCropSettings] = useState(undefined)
-    const [grayscale, setGrayscale] = useState(0);
+    const [scale, setScale] = useState(1)
+    const [grayscale, setGrayscale] = useState(undefined)
     const [rotation, setRotation] = useState(0);
+    const [cropSettings, setCropSettings] = useState() // Нужно, чтобы отрисовывать старую неизмененную картинку после скейла
     const canvasRef = useRef(null)
+    const imageSizeRef = useRef()
     const sectionRef = useRef(null)
     const imageRef = useRef(null)
 
     const imageClass = classes.image
 
+    useGesture(
+        {
+            onPinch: () => {
+                console.log("pinch");
+            }
+        },
+        {
+            domTarget: imageRef
+        }
+    )
+
     useEffect(() => {
-        setupCropper()
+        setupCropperSize()
 
-        const {
-            ctx, image, 
-            imageXCoord, imageYCoord, 
+        const { 
+            ctx,
+            canvas,
+            image,
+            imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
-            canvasWidth, canvasHeight,
-        } = getUpdatedCropSettingsWithNewScale()
+            canvasWidth, canvasHeight
+        } = getUpdatedCropSettings();
 
-        setCropSettings({
-            ctx, image, 
-            imageXCoord, imageYCoord, 
+        setCropSettings({ 
+            ctx,
+            canvas,
+            image,
+            imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
-            canvasWidth, canvasHeight,
+            canvasWidth, canvasHeight
         })
 
         setIsCropShowing(true)
     }, [])
 
     useEffect(() => {
-        if(cropSettings) {
-
-            const { 
+        if(grayscale !== undefined) {
+            const {
                 ctx,
                 image,
                 imageXCoord, imageYCoord,
@@ -62,6 +78,43 @@ function Crop({ src }) {
         }
     }, [grayscale])
 
+    useEffect(() => {
+        console.log(Math.abs(rotation))
+        if(canvasRef.current) {
+            const { 
+                ctx,
+                canvas,
+                image,
+                imageXCoord, imageYCoord,
+                imageScaledWidth, imageScaledHeight,
+                canvasWidth, canvasHeight
+            } = getUpdatedCropSettings();
+            updateImageSizeOnRotation()
+            // ctx.translate(canvasWidth / 2, canvasHeight / 2);
+            // ctx.rotate(Math.PI / 4); // поворот на 45 градусов
+            // ctx.drawImage(image, -imageXCoord, -imageYCoord, image.width, image.height)
+            
+            // const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+            
+            // console.log(dataURL);
+
+            // setImages(prev => {
+            //     return prev.map(item => {
+            //         if(item.src === src) {
+            //             return {
+            //                 src: dataURL, 
+            //                 rotation: 0,
+            //                 grayscale: true,
+            //                 crop: {right: "string", left: "string", top: "string", bottom: "string"}
+            //             }
+            //         } else {
+            //             return item
+            //         }
+            //     })
+            // })
+        }
+    }, [rotation])
+
     function handleWheel(e) {
         const delta = e.deltaY;
         if (delta < 0) {
@@ -71,15 +124,27 @@ function Crop({ src }) {
         }
     }
 
-    function setupCropper() {
+    function updateImageSizeOnRotation() {
+        if(Math.abs(rotation * Math.PI / 180 % Math.PI) === 0) {
+            canvasRef.current.style.maxWidth = "100%"
+        } else {
+            canvasRef.current.style.maxWidth = imageRef.current.height + "px"
+        }
+    }
+
+    function setupCropperSize() {
         const canvas = canvasRef.current
         const image = imageRef.current
 
-        canvas.width = image.width;
-        canvas.height = image.height;
+        imageSizeRef.current = {
+            width: image.naturalWidth, height: image.naturalHeight
+        }
+
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
     }
 
-    function getUpdatedCropSettingsWithNewScale() {
+    function getUpdatedCropSettings() {
         const canvas = canvasRef.current
         const image = imageRef.current
 
@@ -96,9 +161,10 @@ function Crop({ src }) {
 
         const imageXCoord = (imageInitialWidth - imageScaledWidth) / 2
         const imageYCoord = (imageInitialHeight - imageScaledHeight) / 2
-
+    
         return {
-            ctx, image, 
+            ctx, canvas, image, 
+            aspectRatio,
             imageXCoord, imageYCoord, 
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight,
@@ -120,17 +186,20 @@ function Crop({ src }) {
             imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight,
-        } = getUpdatedCropSettingsWithNewScale();
+        } = getUpdatedCropSettings();
 
-        setCropSettings(prev => ({...prev,
+            // ctx.globalAlpha = 0.5
+            // ctx.rotate(90 * Math.PI / 180)
+            // ctx.globalAlpha = 0.5
+            // ctx.rotate(90 * Math.PI / 180)
+        setCropSettings({
             ctx,
             image,
             imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight
-        }))
-        
-        // ctx.globalAlpha = 0.5
+        })
+
         ctx.drawImage(
             image,
             imageXCoord, imageYCoord,
@@ -141,11 +210,23 @@ function Crop({ src }) {
         // ctx.clearRect(0, 0, canvas.width, canvas.height)
     }
 
-    function onRotate(direction) {
+    function onRotation(direction) {
         if(direction === "right") {
-            setRotation(prev => prev + 90)
+            setRotation(prev => {
+                if(prev + 90 > 360) {
+                    return 90
+                } else {
+                    return prev + 90
+                }
+            })
         } else {
-            setRotation(prev => prev - 90)
+            setRotation(prev => {
+                if(prev - 90 < 0) {
+                    return 270
+                } else {
+                    return prev - 90
+                }
+            })
         }
     }
 
@@ -156,7 +237,7 @@ function Crop({ src }) {
             className={classes.crop}>
             <img
                 style={{
-                    transform: `scale(${scale})`,
+                    transform: `scale(${scale}) rotateZ(${rotation}deg)`,
                 }}
                 ref={imageRef}
                 className={imageClass}
@@ -172,7 +253,7 @@ function Crop({ src }) {
             <nav className={classes.navigation}>
                 <ul>
                     <li>
-                        <button onClick={() => onRotate("left")}>
+                        <button onClick={() => onRotation("left")}>
                             <img src={rotateLeft} alt="Rotate left image" />
                         </button>
                     </li>
@@ -182,7 +263,7 @@ function Crop({ src }) {
                             onClick={onCrop}>Crop</button>
                     </li>
                     <li>
-                        <button onClick={() => onRotate("right")}>
+                        <button onClick={() => onRotation("right")}>
                             <img src={rotateRight} alt="Rotate Right image" />
                         </button>
                     </li>

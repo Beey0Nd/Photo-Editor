@@ -9,7 +9,7 @@
 
     .cropper {
         display: block;
-        width: 100%;
+        max-width: 100%;
         max-height: -webkit-fill-available;
         margin: auto;
         position: absolute;

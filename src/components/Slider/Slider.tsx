@@ -122,7 +122,9 @@ function Slider({ images, setImages, activePage, setActivePage, activeModal, set
             </div>
             {(activeModal && activeModal.name === "slider") && createPortal(
                 <Modal name="slider" setActiveModal={setActiveModal}>
-                    <ImageContent setActiveModal={setActiveModal} src={images[activePage].src} />
+                    <ImageContent 
+                    setImages={setImages}
+                    setActiveModal={setActiveModal} src={images[activePage].src} />
                 </Modal>, document.querySelector(".App") as Element
             )}
         </section>
