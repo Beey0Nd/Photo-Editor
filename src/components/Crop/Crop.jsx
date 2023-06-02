@@ -25,18 +25,19 @@ function Crop({ src, setImages }) {
     useGesture(
         {
             onPinch: () => {
-                console.log("pinch");
+                setScale(prev => prev - 1)
             }
         },
         {
-            domTarget: imageRef
+            domTarget: imageRef,
+            eventOptions: { passive: false }
         }
     )
 
     useEffect(() => {
         setupCropperSize()
 
-        const { 
+        const {
             ctx,
             canvas,
             image,
@@ -45,7 +46,7 @@ function Crop({ src, setImages }) {
             canvasWidth, canvasHeight
         } = getUpdatedCropSettings();
 
-        setCropSettings({ 
+        setCropSettings({
             ctx,
             canvas,
             image,
@@ -58,7 +59,7 @@ function Crop({ src, setImages }) {
     }, [])
 
     useEffect(() => {
-        if(grayscale !== undefined) {
+        if (grayscale !== undefined) {
             const {
                 ctx,
                 image,
@@ -66,7 +67,7 @@ function Crop({ src, setImages }) {
                 imageScaledWidth, imageScaledHeight,
                 canvasWidth, canvasHeight
             } = cropSettings;
-    
+
             ctx.filter = `grayscale(${grayscale})`
             ctx.drawImage(
                 image,
@@ -80,8 +81,8 @@ function Crop({ src, setImages }) {
 
     useEffect(() => {
         console.log(Math.abs(rotation))
-        if(canvasRef.current) {
-            const { 
+        if (canvasRef.current) {
+            const {
                 ctx,
                 canvas,
                 image,
@@ -93,9 +94,9 @@ function Crop({ src, setImages }) {
             // ctx.translate(canvasWidth / 2, canvasHeight / 2);
             // ctx.rotate(Math.PI / 4); // поворот на 45 градусов
             // ctx.drawImage(image, -imageXCoord, -imageYCoord, image.width, image.height)
-            
+
             // const dataURL = canvas.toDataURL('image/jpeg', 1.0);
-            
+
             // console.log(dataURL);
 
             // setImages(prev => {
@@ -125,7 +126,7 @@ function Crop({ src, setImages }) {
     }
 
     function updateImageSizeOnRotation() {
-        if(Math.abs(rotation * Math.PI / 180 % Math.PI) === 0) {
+        if (Math.abs(rotation * Math.PI / 180 % Math.PI) === 0) {
             canvasRef.current.style.maxWidth = "100%"
         } else {
             canvasRef.current.style.maxWidth = imageRef.current.height + "px"
@@ -161,18 +162,18 @@ function Crop({ src, setImages }) {
 
         const imageXCoord = (imageInitialWidth - imageScaledWidth) / 2
         const imageYCoord = (imageInitialHeight - imageScaledHeight) / 2
-    
+
         return {
-            ctx, canvas, image, 
+            ctx, canvas, image,
             aspectRatio,
-            imageXCoord, imageYCoord, 
+            imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight,
         }
     }
 
     function onGrayscale() {
-        if(grayscale) {
+        if (grayscale) {
             setGrayscale(0)
         } else {
             setGrayscale(1)
@@ -188,10 +189,10 @@ function Crop({ src, setImages }) {
             canvasWidth, canvasHeight,
         } = getUpdatedCropSettings();
 
-            // ctx.globalAlpha = 0.5
-            // ctx.rotate(90 * Math.PI / 180)
-            // ctx.globalAlpha = 0.5
-            // ctx.rotate(90 * Math.PI / 180)
+        // ctx.globalAlpha = 0.5
+        // ctx.rotate(90 * Math.PI / 180)
+        // ctx.globalAlpha = 0.5
+        // ctx.rotate(90 * Math.PI / 180)
         setCropSettings({
             ctx,
             image,
@@ -211,9 +212,9 @@ function Crop({ src, setImages }) {
     }
 
     function onRotation(direction) {
-        if(direction === "right") {
+        if (direction === "right") {
             setRotation(prev => {
-                if(prev + 90 > 360) {
+                if (prev + 90 > 360) {
                     return 90
                 } else {
                     return prev + 90
@@ -221,7 +222,7 @@ function Crop({ src, setImages }) {
             })
         } else {
             setRotation(prev => {
-                if(prev - 90 < 0) {
+                if (prev - 90 < 0) {
                     return 270
                 } else {
                     return prev - 90
@@ -237,6 +238,7 @@ function Crop({ src, setImages }) {
             className={classes.crop}>
             <img
                 style={{
+                    touchAction: "none",
                     transform: `scale(${scale}) rotateZ(${rotation}deg)`,
                 }}
                 ref={imageRef}
