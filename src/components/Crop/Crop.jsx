@@ -4,7 +4,7 @@ import classes from "./Crop.module.scss";
 import rotateLeft from "../../icons/rotate-left.png";
 import rotateRight from "../../icons/rotate-right.png";
 import grayscaleImage from "../../icons/greyscale.png";
-import { useGesture } from "@use-gesture/react";
+import { usePinch } from "@use-gesture/react";
 // interface Props {
 //     src: string
 // }
@@ -22,18 +22,11 @@ function Crop({ src, setImages }) {
 
     const imageClass = classes.image
 
-    useGesture(
-        {
-            onPinch: (e) => {
-                console.log(e)
-            },
-            
-        },
-        {
-            target: imageRef,
-            eventOptions: { passive: false }
-        }
-    )
+    // const bind = usePinch(({ pinch }) => {
+    //     if (pinch) {
+    //         setScale(prev => Math.round((prev + 0.1) * 10) / 10)
+    //     }
+    // })
 
     useEffect(() => {
         setupCropperSize()
@@ -81,7 +74,6 @@ function Crop({ src, setImages }) {
     }, [grayscale])
 
     useEffect(() => {
-        console.log(Math.abs(rotation))
         if (canvasRef.current) {
             const {
                 ctx,
@@ -91,7 +83,7 @@ function Crop({ src, setImages }) {
                 imageScaledWidth, imageScaledHeight,
                 canvasWidth, canvasHeight
             } = getUpdatedCropSettings();
-            updateImageSizeOnRotation()
+            updateCropperSizeOnRotation()
             // ctx.translate(canvasWidth / 2, canvasHeight / 2);
             // ctx.rotate(Math.PI / 4); // поворот на 45 градусов
             // ctx.drawImage(image, -imageXCoord, -imageYCoord, image.width, image.height)
@@ -126,7 +118,7 @@ function Crop({ src, setImages }) {
         }
     }
 
-    function updateImageSizeOnRotation() {
+    function updateCropperSizeOnRotation() {
         if (Math.abs(rotation * Math.PI / 180 % Math.PI) === 0) {
             canvasRef.current.style.maxWidth = "100%"
         } else {
@@ -139,11 +131,11 @@ function Crop({ src, setImages }) {
         const image = imageRef.current
 
         imageSizeRef.current = {
-            width: image.naturalWidth, height: image.naturalHeight
+            width: image.width, height: image.height
         }
 
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
+        canvas.width = image.width;
+        canvas.height = image.height;
     }
 
     function getUpdatedCropSettings() {
@@ -184,6 +176,7 @@ function Crop({ src, setImages }) {
     function onCrop() {
         const {
             ctx,
+            canvas,
             image,
             imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
@@ -196,12 +189,13 @@ function Crop({ src, setImages }) {
         // ctx.rotate(90 * Math.PI / 180)
         setCropSettings({
             ctx,
+            canvas,
             image,
             imageXCoord, imageYCoord,
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight
         })
-
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(
             image,
             imageXCoord, imageYCoord,
@@ -236,16 +230,17 @@ function Crop({ src, setImages }) {
         <div
             ref={sectionRef}
             onWheel={handleWheel}
-            className={classes.crop}>
+            className={classes.crop} 
+            >
             <img
                 style={{
-                    touchAction: "none",
                     transform: `scale(${scale}) rotateZ(${rotation}deg)`,
                 }}
                 ref={imageRef}
                 className={imageClass}
                 src={src}
-                alt="alt" />
+                alt="alt"
+            />
             <canvas
                 ref={canvasRef}
                 className={classes.cropper}

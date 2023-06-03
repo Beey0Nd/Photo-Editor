@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import { Dispatch, useEffect } from "react";
 import classes from "./Modal.module.scss"
 import { IModal } from "../App/App";
 
@@ -9,6 +9,16 @@ interface Props {
 }
 
 function Modal({ setActiveModal, name, children }: Props) {
+    useEffect(() => {
+        const body = document.querySelector("body") as HTMLBodyElement
+
+        body.style.position = "fixed"
+        
+        return () => {
+            body.style.position = "static"  
+        }
+    }, [])
+
     const handleClick = () => setActiveModal({
         name: "",
         active: false
