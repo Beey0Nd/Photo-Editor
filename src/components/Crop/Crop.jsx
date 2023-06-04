@@ -324,6 +324,7 @@ function Crop({ src, setImages, setActiveModal }) {
 
     return (
         <div
+            onTouchMove={handleTouchMove}
             ref={sectionRef}
             onWheel={handleWheel}
             className={classes.crop}
