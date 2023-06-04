@@ -33,11 +33,6 @@ function Crop({ src, setImages, setActiveModal }) {
     useEffect(() => {
         setupCropperSize()
 
-        document.querySelector(`.${classes.crop}`).addEventListener("touchmove", 
-        handleTouchMove, {
-            passive: false
-        })
-
         // const {
         //     ctx,
         //     canvas,
