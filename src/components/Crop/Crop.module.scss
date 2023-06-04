@@ -47,6 +47,14 @@
                     img {
                         height: 2rem;
                     }
+                    &:disabled {
+                        filter: opacity(.5);
+                    }
+                }
+                &:last-child {
+                    button {
+                        background: yellowgreen;
+                    }
                 }
             }
         }

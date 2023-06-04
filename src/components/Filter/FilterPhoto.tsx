@@ -59,10 +59,12 @@ function FilterPhoto({
 
     return (
         <li
+            // onTouchStart={() => handleDragStart(src)}
             onDragStart={() => handleDragStart(src)}
             className={chosenPhotos.some(photo => photo.id === id) ? classes.chosen : ""}
             onClick={handleClick}>
             <img
+                draggable
                 src={src} alt={alt} />
         </li>
     );

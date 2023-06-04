@@ -13,9 +13,9 @@ function Modal({ setActiveModal, name, children }: Props) {
         const body = document.querySelector("body") as HTMLBodyElement
 
         body.style.position = "fixed"
-        
+
         return () => {
-            body.style.position = "static"  
+            body.style.position = "static" 
         }
     }, [])
 

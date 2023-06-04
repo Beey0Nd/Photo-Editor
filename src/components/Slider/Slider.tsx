@@ -90,6 +90,8 @@ function Slider({ images, setImages, activePage, setActivePage, activeModal, set
         <section className={classes.slider}>
             <div>
                 <ul
+                    // onTouchEnd={(e) => handleDrop(e)}
+                    // onTouchMove={(e) => handleDragOver(e)}
                     onDragOver={(e) => handleDragOver(e)}
                     onDragLeave={(e) => handleDragLeave(e)}
                     onDrop={(e) => handleDrop(e)}
@@ -99,7 +101,9 @@ function Slider({ images, setImages, activePage, setActivePage, activeModal, set
                     }}>
                     {images.map(image => (
                         <li onClick={handleSlideClick} key={v4()}>
-                            <img src={image.src} alt="Slider image" />
+                            <img 
+                            draggable="false"
+                            src={image.src} alt="Slider image" />
                         </li>
                     ))}
                 </ul>

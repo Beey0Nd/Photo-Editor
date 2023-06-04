@@ -22,7 +22,7 @@ function ImageContent({ src, setActiveModal, setImages }: Props) {
                 onClick={handleClick}>
                 <img src={close} alt="Close button" />
             </button>
-            <Crop setImages={setImages} src={src} /> 
+            <Crop setActiveModal={setActiveModal} setImages={setImages} src={src} /> 
             {/* <div className="">
                 <button>
                     <img src="asd" alt="" />

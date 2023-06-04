@@ -4,17 +4,19 @@ import classes from "./Crop.module.scss";
 import rotateLeft from "../../icons/rotate-left.png";
 import rotateRight from "../../icons/rotate-right.png";
 import grayscaleImage from "../../icons/greyscale.png";
+import check from "../../icons/check.png"
 import { usePinch } from "@use-gesture/react";
 // interface Props {
 //     src: string
 // }
 
-function Crop({ src, setImages }) {
+function Crop({ src, setImages, setActiveModal }) {
     const [isCropShowing, setIsCropShowing] = useState(false)
     const [scale, setScale] = useState(1)
-    const [grayscale, setGrayscale] = useState(undefined)
+    const [grayscale, setGrayscale] = useState(0)
     const [rotation, setRotation] = useState(0);
     const [cropSettings, setCropSettings] = useState() // Нужно, чтобы отрисовывать старую неизмененную картинку после скейла
+    const [cropped, setCropped] = useState(false)
     const canvasRef = useRef(null)
     const imageSizeRef = useRef()
     const sectionRef = useRef(null)
@@ -53,36 +55,7 @@ function Crop({ src, setImages }) {
     }, [])
 
     useEffect(() => {
-        if (grayscale !== undefined) {
-            const {
-                ctx,
-                image,
-                imageXCoord, imageYCoord,
-                imageScaledWidth, imageScaledHeight,
-                canvasWidth, canvasHeight
-            } = cropSettings;
-
-            ctx.filter = `grayscale(${grayscale})`
-            ctx.drawImage(
-                image,
-                imageXCoord, imageYCoord,
-                imageScaledWidth, imageScaledHeight,
-                0, 0,
-                canvasWidth, canvasHeight
-            )
-        }
-    }, [grayscale])
-
-    useEffect(() => {
-        if (canvasRef.current) {
-            const {
-                ctx,
-                canvas,
-                image,
-                imageXCoord, imageYCoord,
-                imageScaledWidth, imageScaledHeight,
-                canvasWidth, canvasHeight
-            } = getUpdatedCropSettings();
+        console.log(rotation);
             updateCropperSizeOnRotation()
             // ctx.translate(canvasWidth / 2, canvasHeight / 2);
             // ctx.rotate(Math.PI / 4); // поворот на 45 градусов
@@ -106,10 +79,73 @@ function Crop({ src, setImages }) {
             //         }
             //     })
             // })
-        }
     }, [rotation])
 
+
+    function restoreDefaultCropState() {
+        if (cropped) setCropped(false)
+        if (grayscale) setGrayscale(0)
+
+        const ctx = canvasRef.current.getContext("2d")
+
+        ctx.clearRect(
+            0, 0,
+            canvasRef.current.width, canvasRef.current.height
+        )
+    }
+
+    function draw(
+        ctx, image,
+        imageXCoord, imageYCoord,
+        imageScaledWidth, imageScaledHeight,
+        canvasWidth, canvasHeight
+    ) {
+        const canvas = canvasRef.current;
+
+        ctx.save()
+        if (rotation === 180) {
+            ctx.scale(-1, -1)
+            ctx.drawImage(
+                image,
+                imageXCoord, imageYCoord,
+                imageScaledWidth, imageScaledHeight,
+                -canvasWidth, -canvasHeight,
+                canvasWidth, canvasHeight
+            )
+        } else if(rotation === 90) {
+            ctx.translate(canvas.width, (-imageScaledWidth + imageScaledHeight));
+            ctx.rotate(Math.PI/2);
+            ctx.drawImage(
+                image,
+                0, 0,
+                imageScaledWidth, imageScaledHeight,
+                0, 0,
+                canvas.width + imageScaledHeight, canvas.width 
+            )
+        } else if(rotation === 270) {
+            ctx.translate(canvas.width/2, canvas.height/2);
+            ctx.rotate(-90 * Math.PI / 180);
+            ctx.drawImage(
+                image, 
+                0, 0, 
+                image.width, image.height, 
+                -canvas.height/2, -canvas.width/2, 
+                canvas.height * 2, canvas.width);
+        } else {
+            ctx.drawImage(
+                image,
+                imageXCoord, imageYCoord,
+                imageScaledWidth, imageScaledHeight,
+                0, 0,
+                canvasWidth, canvasHeight
+            )
+        }
+        ctx.restore()
+    }
+
     function handleWheel(e) {
+        restoreDefaultCropState()
+
         const delta = e.deltaY;
         if (delta < 0) {
             setScale(prev => Math.round((prev + 0.1) * 10) / 10)
@@ -166,11 +202,37 @@ function Crop({ src, setImages }) {
     }
 
     function onGrayscale() {
+        const {
+            ctx,
+            image,
+            imageXCoord, imageYCoord,
+            imageScaledWidth, imageScaledHeight,
+            canvasWidth, canvasHeight
+        } = getUpdatedCropSettings();
+
+        ctx.save()
+
         if (grayscale) {
+            ctx.filter = `grayscale(0)`
+            draw(
+                ctx, image,
+                imageXCoord, imageYCoord,
+                imageScaledWidth, imageScaledHeight,
+                canvasWidth, canvasHeight
+            )
             setGrayscale(0)
         } else {
+            ctx.filter = `grayscale(1)`
+            draw(
+                ctx, image,
+                imageXCoord, imageYCoord,
+                imageScaledWidth, imageScaledHeight,
+                canvasWidth, canvasHeight
+            )
             setGrayscale(1)
         }
+
+        ctx.restore()
     }
 
     function onCrop() {
@@ -187,6 +249,12 @@ function Crop({ src, setImages }) {
         // ctx.rotate(90 * Math.PI / 180)
         // ctx.globalAlpha = 0.5
         // ctx.rotate(90 * Math.PI / 180)
+
+        draw(ctx, image,
+            imageXCoord, imageYCoord,
+            imageScaledWidth, imageScaledHeight,
+            canvasWidth, canvasHeight)
+
         setCropSettings({
             ctx,
             canvas,
@@ -195,22 +263,15 @@ function Crop({ src, setImages }) {
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight
         })
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(
-            image,
-            imageXCoord, imageYCoord,
-            imageScaledWidth, imageScaledHeight,
-            0, 0,
-            canvasWidth, canvasHeight
-        )
-        // ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        setCropped(true)
     }
 
     function onRotation(direction) {
         if (direction === "right") {
             setRotation(prev => {
-                if (prev + 90 > 360) {
-                    return 90
+                if (prev + 90 > 270) {
+                    return 0
                 } else {
                     return prev + 90
                 }
@@ -224,16 +285,35 @@ function Crop({ src, setImages }) {
                 }
             })
         }
+        restoreDefaultCropState()
+    }
+
+    const onSubmitChanges = () => {
+        const imgSrc = canvasRef.current.toDataURL()
+
+        setImages(prev => prev.map(item => {
+            if (item.src === src) {
+                return {
+                    ...item,
+                    src: imgSrc
+                }
+            }
+            return item
+        }))
+
+        setCropped(true)
+        setActiveModal({ name: "", active: false })
     }
 
     return (
         <div
             ref={sectionRef}
             onWheel={handleWheel}
-            className={classes.crop} 
-            >
+            className={classes.crop}
+        >
             <img
                 style={{
+                    visibility: cropped ? "hidden" : "visible",
                     transform: `scale(${scale}) rotateZ(${rotation}deg)`,
                 }}
                 ref={imageRef}
@@ -266,8 +346,15 @@ function Crop({ src, setImages }) {
                         </button>
                     </li>
                     <li>
-                        <button onClick={onGrayscale}>
+                        <button
+                            disabled={!cropped}
+                            onClick={onGrayscale}>
                             <img src={grayscaleImage} alt="Grayscale filter button" />
+                        </button>
+                    </li>
+                    <li>
+                        <button onClick={onSubmitChanges}>
+                            <img src={check} alt="Check mark button" />
                         </button>
                     </li>
                 </ul>
