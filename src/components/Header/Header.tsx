@@ -1,20 +1,17 @@
+import { useContext } from "react"
+import { createPortal } from "react-dom";
+import { AppContext } from "../App/App";
+
+import Modal from "../Modal/Modal";
+import BasketContent from "../Modal/BasketContent";
+
 import burger from "../../icons/dots.png";
 import leftRight from "../../icons/left-and-right.png"
 import classes from "./Header.module.scss"
-import { createPortal } from "react-dom";
-import Modal from "../Modal/Modal";
-import BasketContent from "../Modal/BasketContent";
-import { Dispatch, SetStateAction } from "react";
-import { IModal } from "../App/App";
 
 
-interface Props {
-    activeModal: IModal
-    setActiveModal: Dispatch<SetStateAction<IModal>>
-}
-
-function Header({activeModal, setActiveModal}: Props) {
-
+function Header() {
+    const { activeModal, setActiveModal } = useContext(AppContext)
     return (
         <header className={classes.header}>
             <nav>
@@ -43,7 +40,7 @@ function Header({activeModal, setActiveModal}: Props) {
             </div>
             {activeModal.active && activeModal.name === "header" && createPortal(
                 <Modal name="header" setActiveModal={setActiveModal}>
-                    <BasketContent setActiveModal={setActiveModal}/>
+                    <BasketContent setActiveModal={setActiveModal} />
                 </Modal>, document.querySelector(".App") as Element
             )}
         </header>

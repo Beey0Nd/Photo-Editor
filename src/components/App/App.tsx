@@ -13,9 +13,15 @@ interface ExpandedContext {
     setExpanded: Dispatch<SetStateAction<State>>
 }
 
-interface DragContext {
+interface AppContext {
     dragSrc: string,
     setDragSrc: Dispatch<SetStateAction<string>>
+    images: StateImages,
+    setImages: Dispatch<SetStateAction<StateImages>>,
+    activePage: ActivePage,
+    setActivePage: Dispatch<SetStateAction<ActivePage>>,
+    activeModal: ActiveModal,
+    setActiveModal: Dispatch<SetStateAction<ActiveModal>>
 }
 
 export type State = boolean
@@ -30,41 +36,27 @@ export const ExpandedContext = createContext<ExpandedContext>({
     setExpanded: () => { }
 });
 
-export const DragContext = createContext<DragContext>({
+export const AppContext = createContext<AppContext>({
     dragSrc: "",
-    setDragSrc: () => { }
+    setDragSrc: () => { },
+    images: [],
+    setImages: () => { },
+    activePage: 0,
+    setActivePage: () => {},
+    activeModal: { name: "", active: false },
+    setActiveModal: () => {}
 });
 
-export type Crop = {right: string, left: string, top: string, bottom: string}
-export type Image = { src: string, grayscale: boolean, rotation: number, crop: Crop }
+export type Image = string
 export type StateImages = Image[]
-
-const initialState = {
-    grayscale: false,
-    rotation: 0,
-    crop: {
-        right: "",
-        left: "",
-        top: "",
-        bottom: ""
-    }
-}
+export type ActivePage = number
+export type ActiveModal = {name: string, active: boolean}
 
 function App() {
     const [activeModal, setActiveModal] = useState<IModal>({ name: "", active: false })
     const [expanded, setExpanded] = useState<State>(false)
     const [images, setImages] = useState<StateImages>([
-        {
-            src: abstract,
-            ...initialState
-        },
-        {
-            src: abstract2,
-            ...initialState
-        }, {
-            src: waves,
-            ...initialState
-        }
+        abstract,abstract2,waves
     ]);
     const [dragSrc, setDragSrc] = useState("");
     const [activePage, setActivePage] = useState(0);
@@ -76,22 +68,14 @@ function App() {
                 setExpanded
             }}>
                 <Layout>
-                    <Header
-                        activeModal={activeModal}
-                        setActiveModal={setActiveModal} />
-                    <DragContext.Provider value={{
-                        dragSrc, setDragSrc
+                    <AppContext.Provider value={{
+                        dragSrc, setDragSrc,images,setImages,
+                        activePage, setActivePage, activeModal, setActiveModal
                     }}>
-                        <Slider
-                            images={images}
-                            setImages={setImages}
-                            activePage={activePage}
-                            setActivePage={setActivePage}
-                            activeModal={activeModal}
-                            setActiveModal={setActiveModal}
-                        />
-                        <Filter activePage={activePage} setActivePage={setActivePage} setImages={setImages} />
-                    </DragContext.Provider>
+                    <Header />
+                        <Slider />
+                        <Filter />
+                    </AppContext.Provider>
                 </Layout>
             </ExpandedContext.Provider>
         </div>

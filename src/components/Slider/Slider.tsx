@@ -1,26 +1,18 @@
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useContext } from "react";
 import leftArrow from "../../icons/left-arrow.png"
 import rightArrow from "../../icons/right-arrow.png"
 import classes from "./Slider.module.scss"
 import { v4 } from "uuid";
 
-import { DragContext, ExpandedContext, IModal, StateImages } from "../App/App";
+import { AppContext, ExpandedContext } from "../App/App";
 import Modal from "../Modal/Modal";
 import ImageContent from "../Modal/ImageContent";
 import { createPortal } from "react-dom";
 
-interface Props {
-    images: StateImages
-    setImages: Dispatch<SetStateAction<StateImages>>
-    activePage: number,
-    setActivePage: Dispatch<SetStateAction<number>>,
-    activeModal: IModal,
-    setActiveModal: Dispatch<SetStateAction<IModal>>
-}
-
-function Slider({ images, setImages, activePage, setActivePage, activeModal, setActiveModal }: Props) {
+function Slider() {
     const { expanded } = useContext(ExpandedContext)
-    const { dragSrc, setDragSrc } = useContext(DragContext)
+    const { activePage, setActivePage } = useContext(AppContext)
+    const { dragSrc, setDragSrc, images, setImages, activeModal, setActiveModal } = useContext(AppContext)
 
     if (expanded) return null
 
@@ -52,15 +44,8 @@ function Slider({ images, setImages, activePage, setActivePage, activeModal, set
 
         target.style.opacity = "1"
 
-        const newImage = {
-            src: dragSrc,
-            grayscale: false,
-            rotation: 0,
-            crop: {left: "", right: "", top: "", bottom: ""}
-        }
-
         setImages(prev => {
-            return [...prev.slice(0, activePage), newImage, ...prev.slice(activePage, prev.length)]
+            return [...prev.slice(0, activePage), dragSrc, ...prev.slice(activePage, prev.length)]
         })
         setDragSrc("")
     }
@@ -101,9 +86,9 @@ function Slider({ images, setImages, activePage, setActivePage, activeModal, set
                     }}>
                     {images.map(image => (
                         <li onClick={handleSlideClick} key={v4()}>
-                            <img 
-                            draggable="false"
-                            src={image.src} alt="Slider image" />
+                            <img
+                                draggable="false"
+                                src={image} alt="Slider image" />
                         </li>
                     ))}
                 </ul>
@@ -126,9 +111,9 @@ function Slider({ images, setImages, activePage, setActivePage, activeModal, set
             </div>
             {(activeModal && activeModal.name === "slider") && createPortal(
                 <Modal name="slider" setActiveModal={setActiveModal}>
-                    <ImageContent 
-                    setImages={setImages}
-                    setActiveModal={setActiveModal} src={images[activePage].src} />
+                    <ImageContent
+                        setImages={setImages}
+                        setActiveModal={setActiveModal} src={images[activePage]} />
                 </Modal>, document.querySelector(".App") as Element
             )}
         </section>

@@ -1,11 +1,12 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState, useContext } from "react";
 import Buttons from "./Buttons";
 import RemoveSection from "./RemoveSection";
 import FilterPhotos from "./FilterPhotos";
 import classes from "./Filter.module.scss"
 import abstract4 from "../../images/abstract4.jpg"
 import abstract5 from "../../images/abstract5.jpg"
-import { StateImages } from "../App/App";
+import { AppContext } from "../App/App";
+
 
 export interface ChosenPhoto {
     id: number
@@ -18,14 +19,9 @@ export interface StatePhoto {
     id: number,
     type: string
 }
-interface Props {
-    activePage: number,
-    setActivePage: Dispatch<SetStateAction<number>>,
-    setImages: Dispatch<SetStateAction<StateImages>>,
-}
 
-
-function Filter({ activePage, setActivePage, setImages }: Props) {
+function Filter() {
+    const { activePage, setActivePage, setImages } = useContext(AppContext)
     const [mode, setMode] = useState<StateMode>("read")
     const [activeButton, setActiveButton] = useState("Галерея");
     const [chosenPhotos, setChosenPhotos] = useState<ChosenPhotosState>([]);

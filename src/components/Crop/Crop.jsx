@@ -292,11 +292,8 @@ function Crop({ src, setImages, setActiveModal }) {
         const imgSrc = canvasRef.current.toDataURL()
 
         setImages(prev => prev.map(item => {
-            if (item.src === src) {
-                return {
-                    ...item,
-                    src: imgSrc
-                }
+            if (item === src) {
+                return imgSrc
             }
             return item
         }))
