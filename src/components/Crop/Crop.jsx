@@ -33,6 +33,11 @@ function Crop({ src, setImages, setActiveModal }) {
     useEffect(() => {
         setupCropperSize()
 
+        document.querySelector(`.${classes.crop}`).addEventListener("touchmove", 
+        handleTouchMove, {
+            passive: false
+        })
+
         // const {
         //     ctx,
         //     canvas,
@@ -52,33 +57,34 @@ function Crop({ src, setImages, setActiveModal }) {
         // })
 
         setIsCropShowing(true)
+
     }, [])
 
     useEffect(() => {
         console.log(rotation);
-            updateCropperSizeOnRotation()
-            // ctx.translate(canvasWidth / 2, canvasHeight / 2);
-            // ctx.rotate(Math.PI / 4); // поворот на 45 градусов
-            // ctx.drawImage(image, -imageXCoord, -imageYCoord, image.width, image.height)
+        updateCropperSizeOnRotation()
+        // ctx.translate(canvasWidth / 2, canvasHeight / 2);
+        // ctx.rotate(Math.PI / 4); // поворот на 45 градусов
+        // ctx.drawImage(image, -imageXCoord, -imageYCoord, image.width, image.height)
 
-            // const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+        // const dataURL = canvas.toDataURL('image/jpeg', 1.0);
 
-            // console.log(dataURL);
+        // console.log(dataURL);
 
-            // setImages(prev => {
-            //     return prev.map(item => {
-            //         if(item.src === src) {
-            //             return {
-            //                 src: dataURL, 
-            //                 rotation: 0,
-            //                 grayscale: true,
-            //                 crop: {right: "string", left: "string", top: "string", bottom: "string"}
-            //             }
-            //         } else {
-            //             return item
-            //         }
-            //     })
-            // })
+        // setImages(prev => {
+        //     return prev.map(item => {
+        //         if(item.src === src) {
+        //             return {
+        //                 src: dataURL, 
+        //                 rotation: 0,
+        //                 grayscale: true,
+        //                 crop: {right: "string", left: "string", top: "string", bottom: "string"}
+        //             }
+        //         } else {
+        //             return item
+        //         }
+        //     })
+        // })
     }, [rotation])
 
 
@@ -112,24 +118,24 @@ function Crop({ src, setImages, setActiveModal }) {
                 -canvasWidth, -canvasHeight,
                 canvasWidth, canvasHeight
             )
-        } else if(rotation === 90) {
+        } else if (rotation === 90) {
             ctx.translate(canvas.width, (-imageScaledWidth + imageScaledHeight));
-            ctx.rotate(Math.PI/2);
+            ctx.rotate(Math.PI / 2);
             ctx.drawImage(
                 image,
                 0, 0,
                 imageScaledWidth, imageScaledHeight,
                 0, 0,
-                canvas.width + imageScaledHeight, canvas.width 
+                canvas.width + imageScaledHeight, canvas.width
             )
-        } else if(rotation === 270) {
-            ctx.translate(canvas.width/2, canvas.height/2);
+        } else if (rotation === 270) {
+            ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(-90 * Math.PI / 180);
             ctx.drawImage(
-                image, 
-                0, 0, 
-                image.width, image.height, 
-                -canvas.height/2, -canvas.width/2, 
+                image,
+                0, 0,
+                image.width, image.height,
+                -canvas.height / 2, -canvas.width / 2,
                 canvas.height * 2, canvas.width);
         } else {
             ctx.drawImage(
@@ -300,6 +306,21 @@ function Crop({ src, setImages, setActiveModal }) {
 
         setCropped(true)
         setActiveModal({ name: "", active: false })
+    }
+
+    const handleTouchMove = (e) => {
+        e.preventDefault()
+        if (e.touches.length === 2) {
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            console.log(touch1, touch2);
+
+            const dx = touch1.clientX - touch2.clientX;
+            const dy = touch1.clientY - touch2.clientY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            setScale(Math.min(distance / 100, 3));
+        }
     }
 
     return (
