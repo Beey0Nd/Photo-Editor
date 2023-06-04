@@ -15,7 +15,7 @@ function Crop({ src, setImages, setActiveModal }) {
     const [scale, setScale] = useState(1)
     const [grayscale, setGrayscale] = useState(0)
     const [rotation, setRotation] = useState(0);
-    const [cropSettings, setCropSettings] = useState() // Нужно, чтобы отрисовывать старую неизмененную картинку после скейла
+    // const [cropSettings, setCropSettings] = useState() // Нужно, чтобы отрисовывать старую неизмененную картинку после скейла
     const [cropped, setCropped] = useState(false)
     const canvasRef = useRef(null)
     const imageSizeRef = useRef()
@@ -33,23 +33,23 @@ function Crop({ src, setImages, setActiveModal }) {
     useEffect(() => {
         setupCropperSize()
 
-        const {
-            ctx,
-            canvas,
-            image,
-            imageXCoord, imageYCoord,
-            imageScaledWidth, imageScaledHeight,
-            canvasWidth, canvasHeight
-        } = getUpdatedCropSettings();
+        // const {
+        //     ctx,
+        //     canvas,
+        //     image,
+        //     imageXCoord, imageYCoord,
+        //     imageScaledWidth, imageScaledHeight,
+        //     canvasWidth, canvasHeight
+        // } = getUpdatedCropSettings();
 
-        setCropSettings({
-            ctx,
-            canvas,
-            image,
-            imageXCoord, imageYCoord,
-            imageScaledWidth, imageScaledHeight,
-            canvasWidth, canvasHeight
-        })
+        // setCropSettings({
+        //     ctx,
+        //     canvas,
+        //     image,
+        //     imageXCoord, imageYCoord,
+        //     imageScaledWidth, imageScaledHeight,
+        //     canvasWidth, canvasHeight
+        // })
 
         setIsCropShowing(true)
     }, [])
@@ -255,14 +255,14 @@ function Crop({ src, setImages, setActiveModal }) {
             imageScaledWidth, imageScaledHeight,
             canvasWidth, canvasHeight)
 
-        setCropSettings({
-            ctx,
-            canvas,
-            image,
-            imageXCoord, imageYCoord,
-            imageScaledWidth, imageScaledHeight,
-            canvasWidth, canvasHeight
-        })
+        // setCropSettings({
+        //     ctx,
+        //     canvas,
+        //     image,
+        //     imageXCoord, imageYCoord,
+        //     imageScaledWidth, imageScaledHeight,
+        //     canvasWidth, canvasHeight
+        // })
 
         setCropped(true)
     }
