@@ -309,7 +309,6 @@ function Crop({ src, setImages, setActiveModal }) {
     }
 
     const handleTouchMove = (e) => {
-        e.preventDefault()
         if (e.touches.length === 2) {
             const touch1 = e.touches[0];
             const touch2 = e.touches[1];
