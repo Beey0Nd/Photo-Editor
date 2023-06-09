@@ -1,11 +1,11 @@
-import { useState, useRef, WheelEventHandler, MouseEvent, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import 'cropperjs/dist/cropper.css';
 import classes from "./Crop.module.scss";
 import rotateLeft from "../../icons/rotate-left.png";
 import rotateRight from "../../icons/rotate-right.png";
 import grayscaleImage from "../../icons/greyscale.png";
 import check from "../../icons/check.png"
-import { usePinch } from "@use-gesture/react";
+// import { usePinch } from "@use-gesture/react";
 // interface Props {
 //     src: string
 // }
@@ -366,7 +366,9 @@ function Crop({ src, setImages, setActiveModal }) {
                         </button>
                     </li>
                     <li>
-                        <button onClick={onSubmitChanges}>
+                        <button 
+                        disabled={!cropped}
+                        onClick={onSubmitChanges}>
                             <img src={check} alt="Check mark button" />
                         </button>
                     </li>
